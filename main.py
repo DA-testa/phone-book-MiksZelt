@@ -5,31 +5,32 @@ class Query:
     def __init__(self, query):
         query_list = query.split()
         self.type = query_list[0]
-        self.number = int(query_list[1])
+        self.number = int(query[1])
         if self.type == 'add':
-            self.name = query_list[2]
+            self.name = query[2]
 
 def read_queries():
     n = int(input())
-    return [Query(input()) for i in range(n)]
+    return [Query(input().split()) for i in range(n)]
 
-def write_responses(responses):
-    print('\n'.join(resposnes))
+def write_responses(result):
+    print('\n'.join(result))
 
 def process_queries(queries):
-    responses = []
+    result = []
     contacts = {}
-    
-    for query in queries:
-        if query.type == "add":
-            contacts[query.number] = query.name
-        elif query.type == "del":
-            contacts.pop(query.number, None)
-        elif query.type == "find":
-            response = contacts.get(query.number, "not found")
-            responses.append(response)
-    return responses
+    for cur_query in queries:
+        if cur_query.type == 'add':
+            contacts[cur_query.number] = cur_query.name
+        elif cur_query.type == 'del':
+            if cur_query.number in contacts:
+                del contacts[cur_query.number]
+        else:
+            response = 'not found'
+            if cur_query.number in contacts:
+                response = contacts[cur_query.number]
+            result.append(response)
+    return result
 
 if __name__ == '__main__':
-    queries = read_queries()
-    responses = process_queries(queries)
+    write_responses(process_queries(read_queries()))
