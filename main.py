@@ -1,47 +1,35 @@
 # python3
+# Miks Zeltiņš  13.Grupa  221RDB123
 
 class Query:
     def __init__(self, query):
-        self.type = query[0]
-        self.number = int(query[1])
+        query_list = query.split()
+        self.type = query_list[0]
+        self.number = int(query_list[1])
         if self.type == 'add':
-            self.name = query[2]
+            self.name = query_list[2]
 
 def read_queries():
     n = int(input())
-    return [Query(input().split()) for i in range(n)]
+    return [Query(input()) for i in range(n)]
 
-def write_responses(result):
-    print('\n'.join(result))
+def write_responses(responses):
+    print('\n'.join(resposnes))
 
 def process_queries(queries):
-    result = []
-    # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = []
-    for cur_query in queries:
-        if cur_query.type == 'add':
-            # if we already have contact with such number,
-            # we should rewrite contact's name
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    contact.name = cur_query.name
-                    break
-            else: # otherwise, just add it
-                contacts.append(cur_query)
-        elif cur_query.type == 'del':
-            for j in range(len(contacts)):
-                if contacts[j].number == cur_query.number:
-                    contacts.pop(j)
-                    break
-        else:
-            response = 'not found'
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    response = contact.name
-                    break
-            result.append(response)
-    return result
+    responses = []
+    contacts = {}
+    
+    for query in queries:
+        if query.type == "add":
+            contacts[query.number] = query.name
+        elif query.type == "del":
+            contacts.pop(query.number, None)
+        elif query.type == "find":
+            response = contacts.get(query.number, "not found")
+            responses.append(response)
+    return responses
 
 if __name__ == '__main__':
-    write_responses(process_queries(read_queries()))
-
+    queries = read_queries()
+    responses = process_queries(queries)
