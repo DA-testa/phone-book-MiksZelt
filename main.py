@@ -3,8 +3,7 @@
 
 class Query:
     def __init__(self, query):
-        query_list = query.split()
-        self.type = query_list[0]
+        self.type = query[0]
         self.number = int(query[1])
         if self.type == 'add':
             self.name = query[2]
